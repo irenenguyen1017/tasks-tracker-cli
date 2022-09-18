@@ -1,2 +1,5 @@
+from . import cli, configs
+
+
 def main():
-  print('Hello World')
+    cli.cli_controller(prog_name=configs.__app_name__)
