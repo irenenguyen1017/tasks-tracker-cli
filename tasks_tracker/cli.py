@@ -1,8 +1,15 @@
+from datetime import datetime
 from typing import Optional
 
 from typer import Exit, Option, Typer, echo
 
-from tasks_tracker.configs import __app_name__, __author__, __version__
+from tasks_tracker.configs import (
+    DISPLAYING_DATE_FORMAT,
+    __app_name__,
+    __author__,
+    __version__,
+)
+from tasks_tracker.typing import Priority, Status
 
 cli_controller = Typer(add_completion=False)
 
@@ -40,3 +47,52 @@ def main(
     ),
 ) -> None:
     return
+
+
+@cli_controller.command()
+def add(
+    title: str,
+    priority: Optional[Priority] = Option(
+        None,
+        "--priority",
+        "-p",
+        help="Set task's priority.",
+        is_eager=True,
+        show_default=False,
+    ),
+    status: Optional[Status] = Option(
+        None,
+        "--status",
+        "-s",
+        help="Set task's status.",
+        is_eager=True,
+        show_default=False,
+    ),
+    description: Optional[str] = Option(
+        None,
+        "--description",
+        "-d",
+        help="Set task's description.",
+        is_eager=True,
+        show_default=False,
+    ),
+    start_date: Optional[datetime] = Option(
+        None,
+        "--start-date",
+        "-sd",
+        help="Set the start date. E.g 11/11/2011",
+        is_eager=True,
+        show_default=False,
+        formats=[DISPLAYING_DATE_FORMAT],
+    ),
+    end_date: Optional[datetime] = Option(
+        None,
+        "--end-date",
+        "-ed",
+        help="Set the end date. E.g 11/11/2011",
+        is_eager=True,
+        show_default=False,
+        formats=[DISPLAYING_DATE_FORMAT],
+    ),
+) -> None:
+    print(title)
