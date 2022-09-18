@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "542b446fc083f844ed1c854e77b86deab3fc6a1f600d00d5fdeb28d3f9e00320"
+            "sha256": "63ed358dd4270b09d3a163c4cc3e3f53c552eecc1582d2cb4a767d50e96acde7"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -23,6 +23,14 @@
             ],
             "markers": "python_version >= '3.5'",
             "version": "==22.1.0"
+        },
+        "click": {
+            "hashes": [
+                "sha256:7682dc8afb30297001674575ea00d1814d808d6a36af415a82bd481d37ba7b8e",
+                "sha256:bb4d8133cb15a609f44e8213d9b391b0809795062913b383c62be0ee95b1db48"
+            ],
+            "markers": "python_version >= '3.7'",
+            "version": "==8.1.3"
         },
         "iniconfig": {
             "hashes": [
@@ -82,6 +90,14 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==2.0.1"
+        },
+        "typer": {
+            "hashes": [
+                "sha256:2d5720a5e63f73eaf31edaa15f6ab87f35f0690f8ca233017d7d23d743a91d73",
+                "sha256:54b19e5df18654070a82f8c2aa1da456a4ac16a2a83e6dcd9f170e291c56338e"
+            ],
+            "index": "pypi",
+            "version": "==0.6.1"
         }
     },
     "develop": {
