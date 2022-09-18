@@ -7,10 +7,6 @@ from tasks_tracker import cli, configs
 runner = CliRunner()
 
 
-def add(a, b):
-    return a + b + 1
-
-
 def test_show_app_version():
     result = runner.invoke(cli.cli_controller, ["--version"])
     assert result.exit_code == 0
