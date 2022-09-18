@@ -1,5 +1,3 @@
-from ast import Eq
-
 from typer.testing import CliRunner
 
 from tasks_tracker import cli, configs
