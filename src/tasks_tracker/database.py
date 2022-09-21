@@ -17,15 +17,8 @@ class TasksTrackerData:
         self.prepare_data()
 
     def prepare_data(self) -> bool:
-        create_table_query = """CREATE TABLE IF NOT EXISTS tasks (
-                    id text,
-                    title text,
-                    status text,
-                    priority text,
-                    description text,
-                    start_date text,
-                    end_date text
-                    )"""
+        create_table_query = """CREATE TABLE IF NOT EXISTS tasks( id text, title text, status text, priority text, description text, start_date text, end_date text)"""
+
         try:
             with self.connection:
                 self.connection.cursor().execute(create_table_query)
