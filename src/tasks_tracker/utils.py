@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 
 from rich import box
 from rich.console import Console
@@ -7,7 +7,7 @@ from rich.panel import Panel
 from rich.table import Table
 from typer import BadParameter
 
-from tasks_tracker.configs import DB_DATE_FORMAT, DISPLAYING_DATE_FORMAT
+from tasks_tracker.configs import DB_DATE_FORMAT, DISPLAYING_DATE_FORMAT, NO_TASK_FOUND
 from tasks_tracker.model import Task
 from tasks_tracker.typing import Priority, Status
 
@@ -108,6 +108,26 @@ def format_db_date_str(date: Optional[datetime]) -> Optional[str]:
     return date.strftime(DB_DATE_FORMAT) if date else None
 
 
+def styling_status(status: Optional[str]) -> str:
+    if status == Status.DONE.value:
+        return f"[bold spring_green2]{enum_value_to_str(status)}[/bold spring_green2]"
+    elif status == Status.ON_HOLD.value:
+        return f"[bold orange_red1]{enum_value_to_str(status)}[/bold orange_red1]"
+    elif status == Status.IN_PROGRESS.value:
+        return f"[bold turquoise2]{enum_value_to_str(status)}[/bold turquoise2]"
+    else:
+        return enum_value_to_str(status)
+
+
+def styling_priority(priority: Optional[str]) -> str:
+    if priority == Priority.HIGH.value:
+        return f"[bold orange_red1]{enum_value_to_str(priority)}[/bold orange_red1]"
+    elif priority == Priority.MEDIUM.value:
+        return f"[bold bright_cyan]{enum_value_to_str(priority)}[/bold bright_cyan]"
+    else:
+        return f"[bold]{enum_value_to_str(priority)}[/bold]"
+
+
 def print_task_detail(task: Task) -> None:
     console.print()
     table = Table(show_header=False, show_lines=True, box=box.ROUNDED)
@@ -130,3 +150,37 @@ def print_task_detail(task: Task) -> None:
     table.add_row("Start date", print_date(task.start_date))
     table.add_row("End date", print_date(task.end_date))
     console.print(table)
+
+
+def print_tasks_list_table(tasks: List[Task]) -> None:
+    console.print()
+    if len(tasks) == 0:
+        print_success_message(NO_TASK_FOUND)
+    else:
+        console.print("[bold turquoise2]TASKS LIST[/bold turquoise2]")
+        console.print()
+        table = Table(show_header=True, show_lines=True, box=box.ROUNDED)
+        table.add_column("[bold magenta2]Id[/bold magenta2]", width=10)
+        table.add_column("[bold magenta2]Title[/bold magenta2]", min_width=10, max_width=20)
+        table.add_column(
+            "[bold magenta2]Description[/bold magenta2]",
+            min_width=30,
+            max_width=50,
+            justify="left",
+            no_wrap=False,
+        )
+        table.add_column("[bold magenta2]Priority[/bold magenta2]", width=10, no_wrap=False)
+        table.add_column("[bold magenta2]Status[/bold magenta2]", width=12, no_wrap=False)
+        table.add_column("[bold magenta2]Start date[/bold magenta2]", width=12)
+        table.add_column("[bold magenta2]End date[/bold magenta2]", width=12, no_wrap=False)
+        for task in tasks:
+            table.add_row(
+                task.id,
+                task.title.capitalize() if task.title else "-",
+                f"[left]{task.description.capitalize() if task.description else 'Not provided'}[/left]",
+                styling_priority(task.priority),
+                styling_status(task.status),
+                print_date(task.start_date),
+                print_date(task.end_date),
+            )
+        console.print(table)
