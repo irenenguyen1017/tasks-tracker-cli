@@ -4,13 +4,26 @@ from typing import Optional
 from typer import Exit, Option, Typer, echo
 
 from tasks_tracker.configs import (
+    ADDING_TASK_ERROR,
+    ADDING_TASK_SUCCESS,
+    DB_DATE_FORMAT,
     DISPLAYING_DATE_FORMAT,
     __app_name__,
     __author__,
     __version__,
 )
 from tasks_tracker.database import TasksTrackerData
+from tasks_tracker.model import Task
 from tasks_tracker.typing import Priority, Status
+from tasks_tracker.utils import (
+    format_db_date_str,
+    get_task_priority_value,
+    get_task_status_value,
+    input_data_validation,
+    print_error,
+    print_success_message,
+    print_task_detail,
+)
 
 cli_controller = Typer(add_completion=False)
 
@@ -98,4 +111,24 @@ def add(
         formats=[DISPLAYING_DATE_FORMAT],
     ),
 ) -> None:
-    print(title)
+    input_data_validation(
+        title=title, description=description, start_date=start_date, end_date=end_date
+    )
+
+    task = Task(
+        None,
+        title=title,
+        status=get_task_status_value(status) or Status.NOT_STARTED.value,
+        priority=get_task_priority_value(priority) or Priority.LOW.value,
+        description=description,
+        start_date=format_db_date_str(start_date) or datetime.now().strftime(DB_DATE_FORMAT),
+        end_date=format_db_date_str(end_date),
+    )
+
+    adding_new_task_success = app_data.add_new_task(task)
+
+    if adding_new_task_success:
+        print_success_message(ADDING_TASK_SUCCESS)
+        print_task_detail(task)
+    else:
+        print_error(ADDING_TASK_ERROR)
