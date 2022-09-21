@@ -16,4 +16,4 @@ python_version = "3.10"
 
 [scripts]
 dev = "python -m tasks_tracker"
-test = "python -m pytest tests"
+test = "python -m pytest src/tests"
