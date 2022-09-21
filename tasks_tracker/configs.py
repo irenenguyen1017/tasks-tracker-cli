@@ -4,3 +4,4 @@ __version__ = "0.1.0"
 
 DISPLAYING_DATE_FORMAT = "%d/%m/%Y"
 DB_DATE_FORMAT = "%Y-%m-%d"
+INITIALIZING_DATABASE_ERROR = "Something wrong with database. Please try again."

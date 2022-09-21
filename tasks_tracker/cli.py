@@ -9,9 +9,12 @@ from tasks_tracker.configs import (
     __author__,
     __version__,
 )
+from tasks_tracker.database import TasksTrackerData
 from tasks_tracker.typing import Priority, Status
 
 cli_controller = Typer(add_completion=False)
+
+app_data = TasksTrackerData()
 
 
 def _show_version_callback(value: bool) -> None:
