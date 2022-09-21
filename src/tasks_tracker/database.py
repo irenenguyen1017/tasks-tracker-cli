@@ -2,7 +2,7 @@ from datetime import datetime
 from sqlite3 import Connection, Cursor, connect
 from typing import List, Optional
 
-from tasks_tracker.configs import DATA_CONNECTION_ERROR, DB_DATE_FORMAT
+from tasks_tracker.configs import DATA_CONNECTION_ERROR, DB_DATE_FORMAT, DB_PATH
 from tasks_tracker.model import Task
 from tasks_tracker.typing import Priority, Status
 from tasks_tracker.utils import print_error
@@ -13,7 +13,7 @@ class TasksTrackerData:
     cursor: Cursor
 
     def __init__(self):
-        self.connection = connect("tasks-tracker.db")
+        self.connection = connect(DB_PATH)
         self.cursor = self.connection.cursor()
         self.prepare_data()
 
