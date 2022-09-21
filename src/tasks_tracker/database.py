@@ -1,9 +1,10 @@
+from datetime import datetime
 from sqlite3 import Connection, Cursor, connect
+from typing import List, Optional
 
-from tasks_tracker.configs import DATA_CONNECTION_ERROR
+from tasks_tracker.configs import DATA_CONNECTION_ERROR, DB_DATE_FORMAT
 from tasks_tracker.model import Task
-
-# from tasks_tracker.typing import Priority, Status
+from tasks_tracker.typing import Priority, Status
 from tasks_tracker.utils import print_error
 
 
@@ -49,3 +50,32 @@ class TasksTrackerData:
         except Exception:
             print_error(error_message=DATA_CONNECTION_ERROR, with_trace=True)
             return False
+
+    def get_tasks_list(
+        self,
+        status: Optional[Status] = None,
+        priority: Optional[Priority] = None,
+        start_date: Optional[datetime] = None,
+        end_date: Optional[datetime] = None,
+    ) -> List[Task]:
+        print(start_date)
+
+        get_all_tasks_query = """SELECT * from tasks WHERE (status = ?1 OR ?1 IS NULL) AND (priority = ?2 OR ?2 IS NULL) AND (start_date >= ?3 OR ?3 IS NULL) AND (end_date <= ?4 OR ?4 IS NULL OR end_date IS NULL) ORDER BY start_date ASC"""
+
+        try:
+            with self.connection:
+                self.cursor.execute(
+                    get_all_tasks_query,
+                    (
+                        status.value if status else None,
+                        priority.value if priority else None,
+                        start_date.strftime(DB_DATE_FORMAT) if start_date else None,
+                        end_date.strftime(DB_DATE_FORMAT) if end_date else None,
+                    ),
+                )
+                results = self.cursor.fetchall()
+                return [Task(*result) for result in results]
+
+        except Exception:
+            print_error(error_message=DATA_CONNECTION_ERROR, with_trace=True)
+            return []

@@ -23,6 +23,7 @@ from tasks_tracker.utils import (
     print_error,
     print_success_message,
     print_task_detail,
+    print_tasks_list_table,
 )
 
 cli_controller = Typer(add_completion=False)
@@ -96,7 +97,7 @@ def add(
         None,
         "--start-date",
         "-sd",
-        help="Set the start date. E.g 11/11/2011",
+        help="Set the start date. E.g 22/02/2022",
         is_eager=True,
         show_default=False,
         formats=[DISPLAYING_DATE_FORMAT],
@@ -105,7 +106,7 @@ def add(
         None,
         "--end-date",
         "-ed",
-        help="Set the end date. E.g 11/11/2011",
+        help="Set the end date. E.g 22/02/2022",
         is_eager=True,
         show_default=False,
         formats=[DISPLAYING_DATE_FORMAT],
@@ -132,3 +133,44 @@ def add(
         print_task_detail(task)
     else:
         print_error(ADDING_TASK_ERROR)
+
+
+@cli_controller.command()
+def list(
+    status: Optional[Status] = Option(
+        None,
+        "--status",
+        "-s",
+        help="Filter by status.",
+        is_eager=True,
+        show_default=False,
+    ),
+    priority: Optional[Priority] = Option(
+        None,
+        "--priority",
+        "-p",
+        help="Filter by priority.",
+        is_eager=True,
+        show_default=False,
+    ),
+    start_date: Optional[datetime] = Option(
+        None,
+        "--start-date",
+        "-sd",
+        help="Filter by the date from the start date. E.g 22/02/2022",
+        is_eager=True,
+        show_default=False,
+        formats=[DISPLAYING_DATE_FORMAT],
+    ),
+    end_date: Optional[datetime] = Option(
+        None,
+        "--end-date",
+        "-ed",
+        help="Filter by the date before the end date. E.g 22/02/2022",
+        is_eager=True,
+        show_default=False,
+        formats=[DISPLAYING_DATE_FORMAT],
+    ),
+) -> None:
+    tasks = app_data.get_tasks_list(status, priority, start_date, end_date)
+    print_tasks_list_table(tasks)
