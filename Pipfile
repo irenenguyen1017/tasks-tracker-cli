@@ -1,5 +1,7 @@
 [packages]
 typer = ">=0.6.1"
+nanoid = "*"
+rich = ">=12.5.1"
 tasks-tracker = {path = "."}
 
 [dev-packages]
