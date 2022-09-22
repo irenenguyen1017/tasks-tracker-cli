@@ -1,13 +1,16 @@
 from datetime import datetime
 from typing import Optional
 
-from typer import Exit, Option, Typer, echo
+from typer import Exit, Option, Typer, confirm, echo
 
 from tasks_tracker.configs import (
     ADDING_TASK_ERROR,
     ADDING_TASK_SUCCESS,
     DB_DATE_FORMAT,
     DISPLAYING_DATE_FORMAT,
+    NO_TASK_FOUND_ERROR,
+    UPDATE_TASK_ERROR,
+    UPDATE_TASK_SUCCESS,
     __app_name__,
     __author__,
     __version__,
@@ -174,3 +177,92 @@ def list(
 ) -> None:
     tasks = app_data.get_tasks_list(status, priority, start_date, end_date)
     print_tasks_list_table(tasks)
+
+
+@cli_controller.command()
+def update(
+    id: str,
+    is_forced_update: bool = Option(False, "--force", "-f", help="Force update tasks"),
+    title: Optional[str] = Option(
+        None,
+        "--title",
+        "-t",
+        help="Update task's title",
+        is_eager=True,
+        show_default=False,
+    ),
+    priority: Optional[Priority] = Option(
+        None,
+        "--priority",
+        "-p",
+        help="Update task's priority.",
+        is_eager=True,
+        show_default=False,
+    ),
+    status: Optional[Status] = Option(
+        None,
+        "--status",
+        "-s",
+        help="Update task's status.",
+        is_eager=True,
+        show_default=False,
+    ),
+    description: Optional[str] = Option(
+        None,
+        "--description",
+        "-d",
+        help="Update task's description.",
+        is_eager=True,
+        show_default=False,
+    ),
+    start_date: Optional[datetime] = Option(
+        None,
+        "--start-date",
+        "-sd",
+        help="Update the start date. E.g 22/02/2022",
+        is_eager=True,
+        show_default=False,
+        formats=[DISPLAYING_DATE_FORMAT],
+    ),
+    end_date: Optional[datetime] = Option(
+        None,
+        "--end-date",
+        "-ed",
+        help="Update the end date. E.g 22/02/2022",
+        is_eager=True,
+        show_default=False,
+        formats=[DISPLAYING_DATE_FORMAT],
+    ),
+) -> None:
+    input_data_validation(
+        id=id, title=title, description=description, start_date=start_date, end_date=end_date
+    )
+
+    can_update = confirm("Update this task with provided data?") if not is_forced_update else True
+
+    if can_update:
+        current_task = app_data.find_task_by_id(id)
+
+        if current_task:
+            updated_task = Task(
+                id=id,
+                title=title or current_task.title,
+                status=get_task_status_value(status) or current_task.status,
+                priority=get_task_priority_value(priority) or current_task.priority,
+                description=description or current_task.description,
+                start_date=format_db_date_str(start_date) or current_task.start_date,
+                end_date=format_db_date_str(end_date) or current_task.end_date,
+            )
+
+            is_task_updated_successfully = app_data.update_task(updated_task)
+
+            if is_task_updated_successfully:
+                print_success_message(UPDATE_TASK_SUCCESS)
+                print_task_detail(updated_task)
+            else:
+                print_error(UPDATE_TASK_ERROR)
+        else:
+            print_error(error_message=NO_TASK_FOUND_ERROR)
+
+    else:
+        raise Exit()
