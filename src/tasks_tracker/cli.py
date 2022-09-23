@@ -310,11 +310,11 @@ def delete_all(
         help="Force removing all tasks",
     ),
 ):
-    can_delete = (
+    can_delete_all = (
         confirm("Surely you want to delete all your tasks?") if not is_forced_delete_all else True
     )
 
-    if can_delete:
+    if can_delete_all:
         all_tasks_deleted = app_data.delete_all_tasks()
 
         if all_tasks_deleted:
