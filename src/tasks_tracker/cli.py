@@ -302,6 +302,7 @@ def delete(
         raise Exit()
 
 
+@cli_controller.command()
 def delete_all(
     is_forced_delete_all: bool = Option(
         False,
