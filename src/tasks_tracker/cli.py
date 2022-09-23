@@ -7,6 +7,8 @@ from tasks_tracker.configs import (
     ADDING_TASK_ERROR,
     ADDING_TASK_SUCCESS,
     DB_DATE_FORMAT,
+    DELETE_ALL_TASKS_ERROR,
+    DELETE_ALL_TASKS_SUCCESS,
     DELETE_TASK_ERROR,
     DELETE_TASK_SUCCESS,
     DISPLAYING_DATE_FORMAT,
@@ -273,7 +275,7 @@ def update(
 @cli_controller.command()
 def delete(
     id: str,
-    is_force_update: bool = Option(
+    is_forced_delete: bool = Option(
         False,
         "--force",
         "-f",
@@ -282,7 +284,7 @@ def delete(
 ):
     input_data_validation(id=id)
 
-    can_delete = confirm("Surely you want to delete this task?") if not is_force_update else True
+    can_delete = confirm("Surely you want to delete this task?") if not is_forced_delete else True
 
     if can_delete:
         current_task = app_data.find_task_by_id(id)
@@ -296,5 +298,28 @@ def delete(
                 print_error(DELETE_TASK_ERROR)
         else:
             print_error(error_message=NO_TASK_FOUND_ERROR)
+    else:
+        raise Exit()
+
+
+def delete_all(
+    is_forced_delete_all: bool = Option(
+        False,
+        "--force",
+        "-f",
+        help="Force removing all tasks",
+    ),
+):
+    can_delete = (
+        confirm("Surely you want to delete all your tasks?") if not is_forced_delete_all else True
+    )
+
+    if can_delete:
+        all_tasks_deleted = app_data.delete_all_tasks()
+
+        if all_tasks_deleted:
+            print_success_message(DELETE_ALL_TASKS_SUCCESS)
+        else:
+            print_error(DELETE_ALL_TASKS_ERROR)
     else:
         raise Exit()
