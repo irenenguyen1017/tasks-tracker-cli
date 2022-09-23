@@ -6,6 +6,8 @@ from tasks_tracker.cli import cli_controller
 from tasks_tracker.configs import (
     ADDING_TASK_ERROR,
     ADDING_TASK_SUCCESS,
+    DELETE_ALL_TASKS_ERROR,
+    DELETE_ALL_TASKS_SUCCESS,
     DELETE_TASK_ERROR,
     DELETE_TASK_SUCCESS,
     NO_TASK_FOUND,
@@ -212,3 +214,34 @@ def test_delete_command_without_prompt_and_fail():
     result = runner.invoke(cli_controller, ["delete", "1234567890", "-f"])
     assert result.exit_code == 0
     assert DELETE_TASK_ERROR in result.stdout
+
+
+# Delete all command test
+
+
+def test_detete_all_command_with_help_option():
+    result = runner.invoke(cli_controller, ["delete-all", "--help"])
+    assert result.exit_code == 0
+    # It should show --force option
+    assert "--force" in result.stdout
+
+
+def test_delete_all_command_with_prompt():
+    TasksTrackerData.delete_all_tasks = Mock(return_value=True)
+    result = runner.invoke(cli_controller, ["delete-all"])
+    assert result.exit_code == 0
+    assert "Surely you want to delete all your tasks?" in result.stdout
+
+
+def test_delete_all_command_without_prompt_and_success():
+    TasksTrackerData.delete_all_tasks = Mock(return_value=True)
+    result = runner.invoke(cli_controller, ["delete-all", "-f"])
+    assert result.exit_code == 0
+    assert DELETE_ALL_TASKS_SUCCESS in result.stdout
+
+
+def test_delete_all_command_without_prompt_and_fail():
+    TasksTrackerData.delete_all_tasks = Mock(return_value=False)
+    result = runner.invoke(cli_controller, ["delete-all", "-f"])
+    assert result.exit_code == 0
+    assert DELETE_ALL_TASKS_ERROR in result.stdout
