@@ -7,6 +7,9 @@ from tasks_tracker.configs import (
     ADDING_TASK_ERROR,
     ADDING_TASK_SUCCESS,
     NO_TASK_FOUND,
+    NO_TASK_FOUND_ERROR,
+    UPDATE_TASK_ERROR,
+    UPDATE_TASK_SUCCESS,
     __app_name__,
     __author__,
     __version__,
@@ -112,3 +115,57 @@ def test_list_command_with_data_exist():
     assert result.exit_code == 0
     assert "Title_1" in result.stdout
     assert "Task 1 description" in result.stdout
+
+
+# Update command tests
+
+
+def test_update_command_with_help_option():
+    result = runner.invoke(cli_controller, ["update", "--help"])
+    assert result.exit_code == 0
+    # It should show --title option
+    assert "--title" in result.stdout
+    # It should show --description option
+    assert "--description" in result.stdout
+    # It should show --priority option
+    assert "--priority" in result.stdout
+    # It should show --status option
+    assert "--status" in result.stdout
+    # It should show --start-date option
+    assert "--start-date" in result.stdout
+    # It should show --start-date option
+    assert "--end-date" in result.stdout
+    # It should show --force option
+    assert "--force" in result.stdout
+
+
+def test_update_command_with_prompt():
+    TasksTrackerData.find_task_by_id = Mock(return_value=None)
+    TasksTrackerData.update_task = Mock(return_value=False)
+    result = runner.invoke(cli_controller, ["update", "1234567890"])
+    assert result.exit_code == 0
+    assert "Update this task with provided data?" in result.stdout
+
+
+def test_update_command_with_no_task_id_error():
+    TasksTrackerData.find_task_by_id = Mock(return_value=None)
+    TasksTrackerData.update_task = Mock(return_value=False)
+    result = runner.invoke(cli_controller, ["update", "1234567890", "-f"])
+    assert result.exit_code == 0
+    assert NO_TASK_FOUND_ERROR in result.stdout
+
+
+def test_update_command_without_prompt_and_success():
+    TasksTrackerData.find_task_by_id = Mock(return_value=Task(*mock_task_data[0]))
+    TasksTrackerData.update_task = Mock(return_value=True)
+    result = runner.invoke(cli_controller, ["update", "1234567890", "-f"])
+    assert result.exit_code == 0
+    assert UPDATE_TASK_SUCCESS in result.stdout
+
+
+def test_update_command_without_prompt_and_fail():
+    TasksTrackerData.find_task_by_id = Mock(return_value=Task(*mock_task_data[0]))
+    TasksTrackerData.update_task = Mock(return_value=False)
+    result = runner.invoke(cli_controller, ["update", "1234567890", "-f"])
+    assert result.exit_code == 0
+    assert UPDATE_TASK_ERROR in result.stdout
