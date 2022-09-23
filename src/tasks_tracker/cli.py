@@ -31,6 +31,7 @@ from tasks_tracker.utils import (
     print_success_message,
     print_task_detail,
     print_tasks_list_table,
+    print_text_with_panel,
 )
 
 cli_controller = Typer(add_completion=False)
@@ -40,14 +41,14 @@ app_data = TasksTrackerData()
 
 def _show_version_callback(value: bool) -> None:
     if value:
-        echo(f"{__app_name__} - version: {__version__}")
+        print_text_with_panel(title="Version", content=f"Current version: {__version__}")
         raise Exit()
 
 
 # Author check callback
 def _show_author_callback(value: bool) -> None:
     if value:
-        echo(f"Tasks Tracker CLI is made by {__author__}")
+        print_text_with_panel(title="Author", content=f"Tasks Tracker CLI is made by {__author__}")
         raise Exit()
 
 

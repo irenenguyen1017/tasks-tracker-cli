@@ -73,27 +73,29 @@ def input_data_validation(
     date_validation(start_date, end_date)
 
 
+def print_text_with_panel(
+    title: Optional[str] = None,
+    content: Optional[str] = None,
+    border_style: Optional[str] = "bright_green",
+) -> None:
+    console.print(
+        Panel(
+            content,
+            title=title,
+            title_align="left",
+            border_style=border_style,
+        )
+    )
+
+
 def print_error(error_message: str, with_trace: Optional[bool] = False) -> None:
     if with_trace:
         console.print_exception()
-
-    console.print(
-        Panel(
-            error_message,
-            title="Error",
-            title_align="left",
-            border_style="bright_red",
-        )
-    )
+    print_text_with_panel(title="Error", content=error_message, border_style="bright_red")
 
 
 def print_success_message(message: str) -> None:
-    console.print(
-        Panel(
-            message,
-            border_style="bright_green",
-        )
-    )
+    print_text_with_panel(content=message, border_style="bright_green")
 
 
 def get_task_status_value(status: Optional[Status] = None) -> Optional[str]:
