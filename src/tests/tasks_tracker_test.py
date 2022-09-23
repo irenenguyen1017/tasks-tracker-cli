@@ -6,6 +6,8 @@ from tasks_tracker.cli import cli_controller
 from tasks_tracker.configs import (
     ADDING_TASK_ERROR,
     ADDING_TASK_SUCCESS,
+    DELETE_TASK_ERROR,
+    DELETE_TASK_SUCCESS,
     NO_TASK_FOUND,
     NO_TASK_FOUND_ERROR,
     UPDATE_TASK_ERROR,
@@ -169,3 +171,44 @@ def test_update_command_without_prompt_and_fail():
     result = runner.invoke(cli_controller, ["update", "1234567890", "-f"])
     assert result.exit_code == 0
     assert UPDATE_TASK_ERROR in result.stdout
+
+
+# Delete command test
+
+
+def test_detete_command_with_help_option():
+    result = runner.invoke(cli_controller, ["delete", "--help"])
+    assert result.exit_code == 0
+    # It should show --force option
+    assert "--force" in result.stdout
+
+
+def test_delete_command_with_no_task_id_error():
+    TasksTrackerData.find_task_by_id = Mock(return_value=None)
+    TasksTrackerData.delete_task = Mock(return_value=False)
+    result = runner.invoke(cli_controller, ["delete", "1234567890", "-f"])
+    assert result.exit_code == 0
+    assert NO_TASK_FOUND_ERROR in result.stdout
+
+
+def test_delete_command_with_prompt():
+    TasksTrackerData.delete_task = Mock(return_value=True)
+    result = runner.invoke(cli_controller, ["delete", "1234567890"])
+    assert result.exit_code == 0
+    assert "Surely you want to delete this task?" in result.stdout
+
+
+def test_delete_command_without_prompt_and_success():
+    TasksTrackerData.find_task_by_id = Mock(return_value=Task(*mock_task_data[0]))
+    TasksTrackerData.delete_task = Mock(return_value=True)
+    result = runner.invoke(cli_controller, ["delete", "1234567890", "-f"])
+    assert result.exit_code == 0
+    assert DELETE_TASK_SUCCESS in result.stdout
+
+
+def test_delete_command_without_prompt_and_fail():
+    TasksTrackerData.find_task_by_id = Mock(return_value=Task(*mock_task_data[0]))
+    TasksTrackerData.delete_task = Mock(return_value=False)
+    result = runner.invoke(cli_controller, ["delete", "1234567890", "-f"])
+    assert result.exit_code == 0
+    assert DELETE_TASK_ERROR in result.stdout
