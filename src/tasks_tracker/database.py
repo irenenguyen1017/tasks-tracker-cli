@@ -79,3 +79,60 @@ class TasksTrackerData:
         except Exception:
             print_error(error_message=DATA_CONNECTION_ERROR, with_trace=True)
             return []
+
+    def find_task_by_id(self, id: str) -> Optional[Task]:
+        find_task_query = """SELECT * from tasks WHERE id = ?"""
+
+        try:
+            with self.connection:
+                record = self.cursor.execute(find_task_query, (id,)).fetchone()
+                if record:
+                    task = Task(*record)
+                    return task
+                else:
+                    return None
+        except Exception:
+            print_error(error_message=DATA_CONNECTION_ERROR, with_trace=True)
+            return None
+
+    def update_task(self, task: Task) -> bool:
+        update_query_task = """UPDATE tasks SET title = ?2, status = ?3, priority = ?4, description = ?5, start_date = ?6, end_date = ?7 WHERE id = ?1"""
+
+        try:
+            with self.connection:
+                self.cursor.execute(
+                    update_query_task,
+                    (
+                        task.id,
+                        task.title,
+                        task.status,
+                        task.priority,
+                        task.description,
+                        task.start_date,
+                        task.end_date,
+                    ),
+                )
+            return True
+        except Exception:
+            print_error(error_message=DATA_CONNECTION_ERROR, with_trace=True)
+            return False
+
+    def delete_task(self, id: str) -> bool:
+        delete_query_task = """DELETE from tasks WHERE id = ?"""
+        try:
+            with self.connection:
+                self.cursor.execute(delete_query_task, (id,))
+            return True
+        except Exception:
+            print_error(error_message=DATA_CONNECTION_ERROR, with_trace=True)
+            return False
+
+    def delete_all_tasks(self) -> bool:
+        delete_query_task = """DELETE from tasks"""
+        try:
+            with self.connection:
+                self.cursor.execute(delete_query_task)
+            return True
+        except Exception:
+            print_error(error_message=DATA_CONNECTION_ERROR, with_trace=True)
+            return False

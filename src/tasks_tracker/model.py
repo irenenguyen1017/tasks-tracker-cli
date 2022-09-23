@@ -24,4 +24,4 @@ class Task:
         self.end_date = end_date
 
     def __repr__(self) -> str:
-        return f"({self.title}, {self.status}, {self.priority}, {self.description}, {self.start_date}, {self.end_date})"
+        return f"({self.id}, {self.title}, {self.status}, {self.priority}, {self.description}, {self.start_date}, {self.end_date})"
