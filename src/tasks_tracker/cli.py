@@ -7,6 +7,8 @@ from tasks_tracker.configs import (
     ADDING_TASK_ERROR,
     ADDING_TASK_SUCCESS,
     DB_DATE_FORMAT,
+    DELETE_TASK_ERROR,
+    DELETE_TASK_SUCCESS,
     DISPLAYING_DATE_FORMAT,
     NO_TASK_FOUND_ERROR,
     UPDATE_TASK_ERROR,
@@ -264,5 +266,35 @@ def update(
         else:
             print_error(error_message=NO_TASK_FOUND_ERROR)
 
+    else:
+        raise Exit()
+
+
+@cli_controller.command()
+def delete(
+    id: str,
+    is_force_update: bool = Option(
+        False,
+        "--force",
+        "-f",
+        help="Force deleting task",
+    ),
+):
+    input_data_validation(id=id)
+
+    can_delete = confirm("Surely you want to delete this task?") if not is_force_update else True
+
+    if can_delete:
+        current_task = app_data.find_task_by_id(id)
+
+        if current_task:
+            is_task_deleted = app_data.delete_task(id)
+
+            if is_task_deleted:
+                print_success_message(DELETE_TASK_SUCCESS)
+            else:
+                print_error(DELETE_TASK_ERROR)
+        else:
+            print_error(error_message=NO_TASK_FOUND_ERROR)
     else:
         raise Exit()

@@ -116,3 +116,13 @@ class TasksTrackerData:
         except Exception:
             print_error(error_message=DATA_CONNECTION_ERROR, with_trace=True)
             return False
+
+    def delete_task(self, id: str) -> bool:
+        delete_query_task = """DELETE from tasks WHERE id = ?"""
+        try:
+            with self.connection:
+                self.cursor.execute(delete_query_task, (id,))
+            return True
+        except Exception:
+            print_error(error_message=DATA_CONNECTION_ERROR, with_trace=True)
+            return False
