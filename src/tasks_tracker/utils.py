@@ -73,27 +73,29 @@ def input_data_validation(
     date_validation(start_date, end_date)
 
 
+def print_text_with_panel(
+    title: Optional[str] = None,
+    content: Optional[str] = None,
+    border_style: Optional[str] = "bright_green",
+) -> None:
+    console.print(
+        Panel(
+            content,
+            title=title,
+            title_align="left",
+            border_style=border_style,
+        )
+    )
+
+
 def print_error(error_message: str, with_trace: Optional[bool] = False) -> None:
     if with_trace:
         console.print_exception()
-
-    console.print(
-        Panel(
-            error_message,
-            title="Error",
-            title_align="left",
-            border_style="bright_red",
-        )
-    )
+    print_text_with_panel(title="Error", content=error_message, border_style="bright_red")
 
 
 def print_success_message(message: str) -> None:
-    console.print(
-        Panel(
-            message,
-            border_style="bright_green",
-        )
-    )
+    print_text_with_panel(content=message, border_style="bright_green")
 
 
 def get_task_status_value(status: Optional[Status] = None) -> Optional[str]:
@@ -128,27 +130,47 @@ def styling_priority(priority: Optional[str]) -> str:
         return f"[bold]{enum_value_to_str(priority)}[/bold]"
 
 
+def print_date_end_with_warning(date_end: Optional[str]) -> Optional[str]:
+    display_date_end = print_date(date_end)
+
+    if date_end is None:
+        return display_date_end
+
+    days_left = (datetime.strptime(date_end, DB_DATE_FORMAT) - datetime.now()).days
+
+    if days_left == 0:
+        return f"[orange1]{display_date_end}[/orange1] \n[orange1 bold]Expired soon[/orange1 bold]"
+    elif days_left < 0:
+        return f"[bright_red]{display_date_end}[/bright_red] \n[bright_red bold]Expired[/bright_red bold]"
+    else:
+        return display_date_end
+
+
 def print_task_detail(task: Task) -> None:
     console.print()
     table = Table(show_header=False, show_lines=True, box=box.ROUNDED)
-    table.add_column(style="bold green_yellow", min_width=10)
-    table.add_column(style="blink magenta", no_wrap=False, min_width=50)
-    table.add_row("Id", task.id)
-    table.add_row("Title", task.title.capitalize() if task.title else "-")
+    table.add_column(style="bold", min_width=10)
+    table.add_column(style="blink", no_wrap=False, min_width=50)
+    table.add_row("[light_green]ID[/light_green]", f"[magenta]{task.id}[/magenta]")
     table.add_row(
-        "Description",
-        task.description if task.description else "Not provided",
+        "[light_green]Title[/light_green]",
+        f"[magenta]{task.title.capitalize() if task.title else '-'}[/magenta]",
     )
     table.add_row(
-        "Priority",
-        enum_value_to_str(task.priority),
+        "[light_green]Description[/light_green]",
+        f"[magenta]{task.description if task.description else 'Not provided'}[/magenta]",
+    )
+    table.add_row("[light_green]Priority[/light_green]", styling_priority(task.priority))
+    table.add_row(
+        "[light_green]Status[/light_green]",
+        styling_status(task.status),
     )
     table.add_row(
-        "Status",
-        enum_value_to_str(task.status),
+        "[light_green]Start date[/light_green]", f"[magenta]{print_date(task.start_date)}[/magenta]"
     )
-    table.add_row("Start date", print_date(task.start_date))
-    table.add_row("End date", print_date(task.end_date))
+    table.add_row(
+        "[light_green]End date[/light_green]", f"[magenta]{print_date(task.end_date)}[/magenta]"
+    )
     console.print(table)
 
 
@@ -172,7 +194,7 @@ def print_tasks_list_table(tasks: List[Task]) -> None:
         table.add_column("[bold magenta2]Priority[/bold magenta2]", width=10, no_wrap=False)
         table.add_column("[bold magenta2]Status[/bold magenta2]", width=12, no_wrap=False)
         table.add_column("[bold magenta2]Start date[/bold magenta2]", width=12)
-        table.add_column("[bold magenta2]End date[/bold magenta2]", width=12, no_wrap=False)
+        table.add_column("[bold magenta2]End date[/bold magenta2]", width=14, no_wrap=False)
         for task in tasks:
             table.add_row(
                 task.id,
@@ -181,6 +203,6 @@ def print_tasks_list_table(tasks: List[Task]) -> None:
                 styling_priority(task.priority),
                 styling_status(task.status),
                 print_date(task.start_date),
-                print_date(task.end_date),
+                print_date_end_with_warning(task.end_date),
             )
         console.print(table)
