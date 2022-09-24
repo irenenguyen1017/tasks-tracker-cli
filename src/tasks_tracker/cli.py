@@ -34,7 +34,9 @@ from tasks_tracker.utils import (
     print_text_with_panel,
 )
 
-cli_controller = Typer(add_completion=False)
+cli_controller = Typer(
+    add_completion=False, help="A simple CLI application to manage and track tasks."
+)
 
 app_data = TasksTrackerData()
 
@@ -58,7 +60,7 @@ def main(
         None,
         "--author",
         "-a",
-        help="Show author of Tasks Tracker CLI and exit.",
+        help="Show author and exit.",
         callback=_show_author_callback,
         is_eager=True,
     ),
@@ -66,7 +68,7 @@ def main(
         None,
         "--version",
         "-v",
-        help="Show version of Tasks Tracker CLI and exit.",
+        help="Show version and exit.",
         callback=_show_version_callback,
         is_eager=True,
     ),
@@ -187,12 +189,12 @@ def list(
 @cli_controller.command()
 def update(
     id: str,
-    is_forced_update: bool = Option(False, "--force", "-f", help="Force update tasks"),
+    is_forced_update: bool = Option(False, "--force", "-f", help="Force update task."),
     title: Optional[str] = Option(
         None,
         "--title",
         "-t",
-        help="Update task's title",
+        help="Update task's title.",
         is_eager=True,
         show_default=False,
     ),
@@ -224,7 +226,7 @@ def update(
         None,
         "--start-date",
         "-sd",
-        help="Update the start date. E.g 22/02/2022",
+        help="Update the start date. E.g 22/02/2022.",
         is_eager=True,
         show_default=False,
         formats=[DISPLAYING_DATE_FORMAT],
@@ -233,7 +235,7 @@ def update(
         None,
         "--end-date",
         "-ed",
-        help="Update the end date. E.g 22/02/2022",
+        help="Update the end date. E.g 22/02/2022.",
         is_eager=True,
         show_default=False,
         formats=[DISPLAYING_DATE_FORMAT],
@@ -280,7 +282,7 @@ def delete(
         False,
         "--force",
         "-f",
-        help="Force deleting task",
+        help="Force deleting task.",
     ),
 ):
     input_data_validation(id=id)
@@ -309,7 +311,7 @@ def delete_all(
         False,
         "--force",
         "-f",
-        help="Force removing all tasks",
+        help="Force deleting all tasks.",
     ),
 ):
     can_delete_all = (
