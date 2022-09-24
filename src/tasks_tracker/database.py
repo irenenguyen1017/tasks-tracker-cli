@@ -58,8 +58,6 @@ class TasksTrackerData:
         start_date: Optional[datetime] = None,
         end_date: Optional[datetime] = None,
     ) -> List[Task]:
-        print(start_date)
-
         get_all_tasks_query = """SELECT * from tasks WHERE (status = ?1 OR ?1 IS NULL) AND (priority = ?2 OR ?2 IS NULL) AND (start_date >= ?3 OR ?3 IS NULL) AND (end_date <= ?4 OR ?4 IS NULL OR end_date IS NULL) ORDER BY start_date ASC"""
 
         try:
