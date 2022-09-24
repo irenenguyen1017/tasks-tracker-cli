@@ -11,5 +11,4 @@ if ! [[ -x "$(command -v pip3.10)" ]]; then
 fi
 
 # Install tasks-tracker package
-current_path=`pwd`
 python -m pip install -e . -r ./requirements.txt
