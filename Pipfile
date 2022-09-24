@@ -2,7 +2,6 @@
 typer = ">=0.6.1"
 nanoid = ">=2.0.0"
 rich = ">=12.5.1"
-tasks-tracker = {path = "."}
 
 [dev-packages]
 black = ">=22.8.0"
