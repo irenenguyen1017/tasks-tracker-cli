@@ -138,7 +138,7 @@ Majority features were tested with 22 test cases to ensure it functions as expec
 
 > List command
 
-- Case 1: Make sure the instruction of `add` command is shown when using `--help` option.
+- Case 1: Make sure the instruction of `list` command is shown when using `--help` option.
 - Case 2: It should show the empty list message when there is no task available.
 - Case 3: It should display a table of tasks when tasks are available.
 
