@@ -293,9 +293,9 @@ def delete(
         current_task = app_data.find_task_by_id(id)
 
         if current_task:
-            is_task_deleted = app_data.delete_task(id)
+            is_task_deleted_succesfully = app_data.delete_task(id)
 
-            if is_task_deleted:
+            if is_task_deleted_succesfully:
                 print_success_message(DELETE_TASK_SUCCESS)
             else:
                 print_error(DELETE_TASK_ERROR)
@@ -319,9 +319,9 @@ def delete_all(
     )
 
     if can_delete_all:
-        all_tasks_deleted = app_data.delete_all_tasks()
+        all_tasks_deleted_successfully = app_data.delete_all_tasks()
 
-        if all_tasks_deleted:
+        if all_tasks_deleted_successfully:
             print_success_message(DELETE_ALL_TASKS_SUCCESS)
         else:
             print_error(DELETE_ALL_TASKS_ERROR)
