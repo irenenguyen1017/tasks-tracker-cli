@@ -78,6 +78,7 @@ def print_text_with_panel(
     content: Optional[str] = None,
     border_style: Optional[str] = "bright_green",
 ) -> None:
+    console.print()
     console.print(
         Panel(
             content,
@@ -86,6 +87,7 @@ def print_text_with_panel(
             border_style=border_style,
         )
     )
+    console.print()
 
 
 def print_error(error_message: str, with_trace: Optional[bool] = False) -> None:
@@ -130,20 +132,20 @@ def styling_priority(priority: Optional[str]) -> str:
         return f"[bold]{enum_value_to_str(priority)}[/bold]"
 
 
-def print_date_end_with_warning(date_end: Optional[str]) -> Optional[str]:
-    display_date_end = print_date(date_end)
+def print_end_date_with_warning(end_date: Optional[str]) -> Optional[str]:
+    display_end_date = print_date(end_date)
 
-    if date_end is None:
-        return display_date_end
+    if end_date is None:
+        return display_end_date
 
-    days_left = (datetime.strptime(date_end, DB_DATE_FORMAT) - datetime.now()).days
+    days_left = (datetime.strptime(end_date, DB_DATE_FORMAT) - datetime.now()).days
 
     if days_left == 0:
-        return f"[orange1]{display_date_end}[/orange1] \n[orange1 bold]Expired soon[/orange1 bold]"
+        return f"[orange1]{display_end_date}[/orange1] \n[orange1 bold]Expired soon[/orange1 bold]"
     elif days_left < 0:
-        return f"[bright_red]{display_date_end}[/bright_red] \n[bright_red bold]Expired[/bright_red bold]"
+        return f"[bright_red]{display_end_date}[/bright_red] \n[bright_red bold]Expired[/bright_red bold]"
     else:
-        return display_date_end
+        return display_end_date
 
 
 def print_task_detail(task: Task) -> None:
@@ -172,6 +174,7 @@ def print_task_detail(task: Task) -> None:
         "[light_green]End date[/light_green]", f"[magenta]{print_date(task.end_date)}[/magenta]"
     )
     console.print(table)
+    console.print()
 
 
 def print_tasks_list_table(tasks: List[Task]) -> None:
@@ -183,7 +186,7 @@ def print_tasks_list_table(tasks: List[Task]) -> None:
         console.print()
         table = Table(show_header=True, show_lines=True, box=box.ROUNDED)
         table.add_column("[bold magenta2]Id[/bold magenta2]", width=10)
-        table.add_column("[bold magenta2]Title[/bold magenta2]", min_width=10, max_width=20)
+        table.add_column("[bold magenta2]Title[/bold magenta2]", min_width=10, max_width=30)
         table.add_column(
             "[bold magenta2]Description[/bold magenta2]",
             min_width=30,
@@ -203,6 +206,7 @@ def print_tasks_list_table(tasks: List[Task]) -> None:
                 styling_priority(task.priority),
                 styling_status(task.status),
                 print_date(task.start_date),
-                print_date_end_with_warning(task.end_date),
+                print_end_date_with_warning(task.end_date),
             )
         console.print(table)
+        console.print()

@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from typer import Exit, Option, Typer, confirm, echo
+from typer import Argument, Exit, Option, Typer, confirm
 
 from tasks_tracker.configs import (
     ADDING_TASK_ERROR,
@@ -50,7 +50,7 @@ def _show_version_callback(value: bool) -> None:
 # Author check callback
 def _show_author_callback(value: bool) -> None:
     if value:
-        print_text_with_panel(title="Author", content=f"Tasks Tracker CLI is made by {__author__}")
+        print_text_with_panel(title="Author", content=f"Tasks Tracker CLI is made by {__author__}.")
         raise Exit()
 
 
@@ -78,7 +78,7 @@ def main(
 
 @cli_controller.command()
 def add(
-    title: str,
+    title: str = Argument(..., help="Provide a brief title for the task.", show_default=False),
     priority: Optional[Priority] = Option(
         None,
         "--priority",
@@ -188,7 +188,7 @@ def list(
 
 @cli_controller.command()
 def update(
-    id: str,
+    id: str = Argument(..., help="Task ID", show_default=False),
     is_forced_update: bool = Option(False, "--force", "-f", help="Force update task."),
     title: Optional[str] = Option(
         None,
@@ -277,7 +277,7 @@ def update(
 
 @cli_controller.command()
 def delete(
-    id: str,
+    id: str = Argument(..., help="Task ID", show_default=False),
     is_forced_delete: bool = Option(
         False,
         "--force",
