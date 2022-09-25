@@ -35,7 +35,7 @@ from tasks_tracker.utils import (
 )
 
 cli_controller = Typer(
-    add_completion=False, help="A simple CLI application to manage and track tasks."
+    add_completion=False, help="A simple CLI application to manage and track multiple tasks."
 )
 
 app_data = TasksTrackerData()
@@ -198,6 +198,14 @@ def update(
         is_eager=True,
         show_default=False,
     ),
+    description: Optional[str] = Option(
+        None,
+        "--description",
+        "-d",
+        help="Update task's description.",
+        is_eager=True,
+        show_default=False,
+    ),
     priority: Optional[Priority] = Option(
         None,
         "--priority",
@@ -211,14 +219,6 @@ def update(
         "--status",
         "-s",
         help="Update task's status.",
-        is_eager=True,
-        show_default=False,
-    ),
-    description: Optional[str] = Option(
-        None,
-        "--description",
-        "-d",
-        help="Update task's description.",
         is_eager=True,
         show_default=False,
     ),

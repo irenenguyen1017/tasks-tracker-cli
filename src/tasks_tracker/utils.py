@@ -43,9 +43,9 @@ def date_validation(
     start_date: Optional[datetime] = None, end_date: Optional[datetime] = None
 ) -> None:
     if start_date and start_date < datetime.now():
-        raise BadParameter("Start date cannot be past date.")
+        raise BadParameter("Start date cannot be a past date.")
     elif end_date and end_date < datetime.now():
-        raise BadParameter("End date cannot be past date.")
+        raise BadParameter("End date cannot be a past date.")
     elif end_date and start_date and end_date < start_date:
         raise BadParameter("End date must be after start date.")
     else:
