@@ -195,7 +195,7 @@ Install `tasks-tracker` package
 cd tasks-tracker-cli && ./scripts/mac-linux-installer.sh
 ```
 
-> If you face an permission error in Mac OS, you can provide permission for installation script with following command:
+> If you face a permission error in Mac OS, you can provide permission for installation script with following command:
 
 ```bash
 chmod +x ./scripts/mac-linux-installer.sh
