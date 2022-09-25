@@ -49,13 +49,13 @@ mock_task_data = (
 def test_show_app_version():
     result = runner.invoke(cli_controller, ["--version"])
     assert result.exit_code == 0
-    assert f"{__app_name__} - version: {__version__}\n" in result.stdout
+    assert f"Current version: {__version__}" in result.stdout
 
 
 def test_show_app_author():
     result = runner.invoke(cli_controller, ["--author"])
     assert result.exit_code == 0
-    assert f"Tasks Tracker CLI is made by {__author__}\n" in result.stdout
+    assert f"Tasks Tracker CLI is made by {__author__}" in result.stdout
 
 
 # Add command tests

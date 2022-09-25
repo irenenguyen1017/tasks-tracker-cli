@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from typer import Exit, Option, Typer, confirm, echo
+from typer import Argument, Exit, Option, Typer, confirm
 
 from tasks_tracker.configs import (
     ADDING_TASK_ERROR,
@@ -35,7 +35,7 @@ from tasks_tracker.utils import (
 )
 
 cli_controller = Typer(
-    add_completion=False, help="A simple CLI application to manage and track tasks."
+    add_completion=False, help="A simple CLI application to manage and track multiple tasks."
 )
 
 app_data = TasksTrackerData()
@@ -50,7 +50,7 @@ def _show_version_callback(value: bool) -> None:
 # Author check callback
 def _show_author_callback(value: bool) -> None:
     if value:
-        print_text_with_panel(title="Author", content=f"Tasks Tracker CLI is made by {__author__}")
+        print_text_with_panel(title="Author", content=f"Tasks Tracker CLI is made by {__author__}.")
         raise Exit()
 
 
@@ -78,7 +78,7 @@ def main(
 
 @cli_controller.command()
 def add(
-    title: str,
+    title: str = Argument(..., help="Provide a brief title for the task.", show_default=False),
     priority: Optional[Priority] = Option(
         None,
         "--priority",
@@ -188,13 +188,21 @@ def list(
 
 @cli_controller.command()
 def update(
-    id: str,
+    id: str = Argument(..., help="Task ID", show_default=False),
     is_forced_update: bool = Option(False, "--force", "-f", help="Force update task."),
     title: Optional[str] = Option(
         None,
         "--title",
         "-t",
         help="Update task's title.",
+        is_eager=True,
+        show_default=False,
+    ),
+    description: Optional[str] = Option(
+        None,
+        "--description",
+        "-d",
+        help="Update task's description.",
         is_eager=True,
         show_default=False,
     ),
@@ -211,14 +219,6 @@ def update(
         "--status",
         "-s",
         help="Update task's status.",
-        is_eager=True,
-        show_default=False,
-    ),
-    description: Optional[str] = Option(
-        None,
-        "--description",
-        "-d",
-        help="Update task's description.",
         is_eager=True,
         show_default=False,
     ),
@@ -277,7 +277,7 @@ def update(
 
 @cli_controller.command()
 def delete(
-    id: str,
+    id: str = Argument(..., help="Task ID", show_default=False),
     is_forced_delete: bool = Option(
         False,
         "--force",
@@ -293,9 +293,9 @@ def delete(
         current_task = app_data.find_task_by_id(id)
 
         if current_task:
-            is_task_deleted = app_data.delete_task(id)
+            is_task_deleted_succesfully = app_data.delete_task(id)
 
-            if is_task_deleted:
+            if is_task_deleted_succesfully:
                 print_success_message(DELETE_TASK_SUCCESS)
             else:
                 print_error(DELETE_TASK_ERROR)
@@ -319,9 +319,9 @@ def delete_all(
     )
 
     if can_delete_all:
-        all_tasks_deleted = app_data.delete_all_tasks()
+        all_tasks_deleted_successfully = app_data.delete_all_tasks()
 
-        if all_tasks_deleted:
+        if all_tasks_deleted_successfully:
             print_success_message(DELETE_ALL_TASKS_SUCCESS)
         else:
             print_error(DELETE_ALL_TASKS_ERROR)

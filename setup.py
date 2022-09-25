@@ -11,7 +11,7 @@ setup(
     entry_points={"console_scripts": ["tasks-tracker = tasks_tracker:main"]},
     url="http://pypi.python.org/pypi/tasks-tracker/",
     license="LICENSE.txt",
-    description="A terminal CLI that can manage tasks.",
+    description="A simple CLI application that can manage and track multiple tasks.",
     install_requires=[
         "rich >= 12.5.1",
         "nanoid >= 2.0.0",
