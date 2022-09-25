@@ -144,7 +144,7 @@ Majority features were tested with 22 test cases to ensure it functions as expec
 
 ### Installation
 
-`Tasks-tracker` requires python3.10 and pip3.10 to be installed to run.
+`Tasks-tracker` requires `python3.10` and `pip` to be installed to run.
 
 Clone the repository
 
