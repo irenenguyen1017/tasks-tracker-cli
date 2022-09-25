@@ -130,17 +130,52 @@ Please find the detailed documentation [here](./docs/instruction.md)
 
 Majority features were tested with 22 test cases to ensure it functions as expected.
 
+> Version check
+
+- Case 1: It should show app version when using `--version` option
+- Case 2: The process should end with exit code 0
+
+> Author check
+
+- Case 1: It should show app author when using `--author` option
+- Case 2: The process should end with exit code 0
+
 > Add command
 
 - Case 1: Make sure the instruction of `add` command is shown when using `--help` option.
 - Case 2: Show the error message when adding a new task to database failed
 - Case 3: Show the success message when adding a task to database succeeded.
+- Case 4: The process should end with exit code 0
 
 > List command
 
 - Case 1: Make sure the instruction of `list` command is shown when using `--help` option.
 - Case 2: It should show the empty list message when there is no task available.
 - Case 3: It should display a table of tasks when tasks are available.
+- Case 4: The process should end with exit code 0
+
+> Update command
+
+- Case 1: Make sure the instruction of `update` command is shown when using `--help` option.
+- Case 2: It should show the prompt when not using `--force` option.
+- Case 3: It shold show no task found error with the provided ID
+- Case 4: It should skip the prompt when using `--force` option and show success message when updating task is successful.
+- Case 5: It should show error message when updating task is failed.
+
+> Delete command
+
+- Case 1: Make sure the instruction of `delete` command is shown when using `--help` option.
+- Case 2: It should show the prompt when not using `--force` option
+- Case 3: It shold show no task found error with the provided ID
+- Case 4: It should skip the prompt when using `--force` option and show success message when deleting task is successful.
+- Case 5: It should show error message when deleting task is failed.
+
+> Deleta all command
+
+- Case 1: Make sure the instruction of `delete-all` command is shown when using `--help` option.
+- Case 2: It should show the prompt when not using `--force` option
+- Case 3 It should skip the prompt when using `--force` option and show success message when deleting all tasks is successful.
+- Case 4: It should show error message when deleting all tasks is failed.
 
 ### Installation
 
