@@ -12,7 +12,7 @@ A CLI application to manage and track multiple tasks built with:
 ## Links
 
 - [GitHub repository](https://github.com/irenenguyen1017/tasks-tracker-cli)
-- [Presentation]('')
+- [Presentation](https://vimeo.com/755099620)
 
 ## Features
 
